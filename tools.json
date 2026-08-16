@@ -1,0 +1,74 @@
+{
+  "$comment": "ツールを追加するときは tools 配列に1オブジェクト足すだけ。並び順は date の降順で自動ソートされます。",
+  "site": {
+    "title": "Tool Archive",
+    "lead": "同じ操作を三度繰り返したとき、スクリプトが生まれる。<br>このアーカイヴは、私の存在の証明である。",
+    "mainSite": "https://fryx404.github.io/",
+    "worksSite": "https://fryx404.github.io/works/",
+    "github": "https://github.com/fryx404",
+    "author": "古屋 匠"
+  },
+  "tools": [
+    {
+      "id": "ft-connect-attribute",
+      "name": "FT_ConnectAttribute",
+      "nameJa": "アトリビュート一括接続ツール",
+      "date": "2025-06",
+      "version": "1.0",
+      "tags": ["Maya", "Python", "Rigging", "GUI"],
+      "summary": "複数のオブジェクトアトリビュートを一括で接続するための Maya ツール。",
+      "description": "ドライバーとなるアトリビュートを1つ選び、接続先（ドリブン）をリストに積み上げていくだけで、まとめて connectAttr を実行します。手作業では膨大になるアトリビュート接続を、ひとつのウィンドウで完結させることを狙ったツールです。",
+      "image": "https://raw.githubusercontent.com/fryx404/FT_ConnectAttribute/main/images/sample.gif",
+      "repo": "https://github.com/fryx404/FT_ConnectAttribute",
+      "download": "https://github.com/fryx404/FT_ConnectAttribute/archive/refs/heads/main.zip",
+      "requirements": ["Autodesk Maya", "Python 2.7 以上"],
+      "install": [
+        "FT_connect_attr.py を Maya のスクリプトディレクトリに配置します。",
+        "Windows: C:\\Users\\<ユーザー名>\\Documents\\maya\\scripts",
+        "Mac: ~/Library/Preferences/Autodesk/maya/scripts",
+        "Linux: ~/maya/scripts"
+      ],
+      "code": "import FT_connect_attr\nFT_connect_attr.show_window()",
+      "usage": [
+        "スクリプトエディタで上記コードを実行し、ウィンドウを開きます。",
+        "ドライバーのアトリビュートを選択して「<<」ボタンで追加します。",
+        "ドリブンオブジェクトとアトリビュートを選択して「Add」でリストに追加します。",
+        "「Connect All」をクリックして、すべての接続を一括で実行します。"
+      ],
+      "notes": [
+        "ドライバー選択時に複数のオブジェクト／アトリビュートが選択されているとエラーになります。",
+        "アトリビュート未選択のまま操作した場合、および接続実行時にドライバー・ドリブンが未設定の場合はエラーメッセージが表示されます。"
+      ]
+    },
+    {
+      "id": "ft-connect-deformer",
+      "name": "FT_ConnectDeformer",
+      "nameJa": "デフォーマ一括接続ツール",
+      "date": "2025-06",
+      "version": "1.0",
+      "tags": ["Maya", "Python", "Rigging", "GUI"],
+      "summary": "複数のオブジェクトを既存のデフォーマに一括で接続するための Maya ツール。",
+      "description": "変形対象オブジェクトと適用したいデフォーマをそれぞれリストに登録し、ワンクリックでまとめて適用します。既存デフォーマへの後付け接続を、選択のたびに繰り返さなくて済むようにしたツールです。",
+      "image": "https://raw.githubusercontent.com/fryx404/FT_ConnectDeformer/main/images/sample.gif",
+      "repo": "https://github.com/fryx404/FT_ConnectDeformer",
+      "download": "https://github.com/fryx404/FT_ConnectDeformer/archive/refs/heads/main.zip",
+      "requirements": ["Maya 2020 以降", "Python 3.x"],
+      "install": [
+        "FT_object_deformer.py を Maya のスクリプトディレクトリに配置します。",
+        "Windows: C:\\Users\\<ユーザー名>\\Documents\\maya\\scripts",
+        "Mac: ~/Library/Preferences/Autodesk/maya/scripts",
+        "Linux: ~/maya/scripts"
+      ],
+      "code": "import FT_object_deformer\nFT_object_deformer.show_connect_to_deformer_gui()",
+      "usage": [
+        "スクリプトエディタで上記コードを実行し、ウィンドウを開きます。",
+        "デフォーマを適用したいオブジェクトを「変形対象オブジェクト」に追加します。",
+        "適用させたいデフォーマを「デフォーマ」に追加します。",
+        "「デフォーマを適用」ボタンを押すと、変形対象オブジェクトにデフォーマが適用されます。"
+      ],
+      "notes": [
+        "「選択したデフォーマを追加」で追加されない場合は「強制追加（検証なし）」を使用してください。"
+      ]
+    }
+  ]
+}

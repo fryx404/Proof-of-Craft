@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Archive — Furuya Takumi</title>
+<meta name="description" content="Furuya Takumi (FRYX) が CG 制作のなかで書いたスクリプトのアーカイヴ。Maya / Python。">
+<meta property="og:title" content="Tool Archive — Furuya Takumi">
+<meta property="og:description" content="Furuya Takumi (FRYX) が CG 制作のなかで書いたスクリプトのアーカイヴ。Maya / Python。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#tools">本文へスキップ</a>
+
+<a class="back-link" href="https://fryx404.github.io/">← Main Site</a>
+
+<main>
+  <section class="hero">
+    <h1 class="hero__title">Tool Archive</h1>
+    <p class="hero__lead" id="site-lead"></p>
+    <div class="hero__scroll" aria-hidden="true"><span></span></div>
+  </section>
+
+  <section id="tools" class="tools">
+    <div class="grid" id="grid"></div>
+
+    <p class="empty" id="empty" hidden>
+      <span class="empty__mark">∅</span>
+      <strong>まだ何も記録されていません</strong>
+      tools.json にツールを追加してください。
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p class="site-footer__copy">© <span id="year"></span> 古屋 匠. All rights reserved.</p>
+</footer>
+
+<!-- ===== Modal ===== -->
+<div class="modal" id="modal" hidden>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal__close" type="button" data-close aria-label="閉じる">✕</button>
+    <div class="modal__body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="./assets/app.js"></script>
+</body>
+</html>

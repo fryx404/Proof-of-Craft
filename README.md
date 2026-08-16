@@ -1,0 +1,136 @@
+# Tool Archive — Proof of Craft
+
+CG 制作のなかで書いたスクリプトのギャラリーサイト。素の HTML + CSS + JS と `tools.json` だけで動きます。ビルド不要。
+（`Proof of Craft` はサイトの通し名で、リポジトリ名にも使っています。画面の見出しは `Tool Archive`）
+
+**公開URL（想定）**: https://fryx404.github.io/Proof-of-Craft/
+
+---
+
+## ツールの追加方法
+
+`tools.json` の `tools` 配列に 1 オブジェクト追加するだけです。HTML は触りません。
+並び順は `date` の降順で自動ソートされます。
+
+```json
+{
+  "id": "ft-new-tool",
+  "name": "FT_NewTool",
+  "nameJa": "新しいツール",
+  "date": "2026-08",
+  "version": "1.0",
+  "tags": ["Maya", "Python"],
+  "summary": "カードに出る1〜2行の説明。",
+  "description": "モーダルに出る本文。何のために作ったかを書く。",
+  "image": "https://raw.githubusercontent.com/fryx404/FT_NewTool/main/images/sample.gif",
+  "repo": "https://github.com/fryx404/FT_NewTool",
+  "download": "https://github.com/fryx404/FT_NewTool/archive/refs/heads/main.zip",
+  "requirements": ["Maya 2020 以降", "Python 3.x"],
+  "install": ["FT_new_tool.py を maya/scripts に配置します。"],
+  "code": "import FT_new_tool\nFT_new_tool.show()",
+  "usage": ["手順1", "手順2"],
+  "notes": ["注意点があれば"]
+}
+```
+
+### フィールド一覧
+
+| キー | 必須 | 説明 |
+|---|---|---|
+| `id` | ● | 一意のスラッグ（英小文字とハイフン） |
+| `name` | ● | ツール名 |
+| `nameJa` | | 日本語名 |
+| `date` | ● | `YYYY-MM`。並び順に使用 |
+| `version` | | バージョン表記 |
+| `tags` | ● | 配列。**色は自動で割り当てられる**（下記参照） |
+| `summary` | ● | カードの短い説明 |
+| `description` | | モーダルの本文 |
+| `image` | | サムネイル。GitHub の raw URL でOK |
+| `repo` / `download` | | ボタンのリンク先 |
+| `requirements` / `install` / `usage` / `notes` | | 配列。空なら見出しごと非表示 |
+| `code` | | 起動用コードブロック。`\n` で改行 |
+
+### タグの色
+
+タグの色は `assets/app.js` の `TAG_COLORS` で決まります。ここに無いタグは、名前から自動で 6 色のいずれかが割り当てられるので、**新しいタグを増やしても設定は不要**です（同じタグ名なら常に同じ色になります）。
+
+色を固定したい場合だけ `TAG_COLORS` に 1 行足してください。
+
+```js
+const TAG_COLORS = {
+  maya: 'teal',
+  python: 'blue',
+  houdini: 'coral',   // ← 追加例
+};
+```
+
+使える色: `teal` / `blue` / `purple` / `coral` / `amber` / `green`
+
+### 画像
+
+画像は GitHub リポジトリの raw URL をそのまま指定できます（形式: `https://raw.githubusercontent.com/fryx404/<repo>/main/images/sample.gif`）。
+ローカルに置きたい場合は `assets/img/` を作って `"image": "./assets/img/xxx.gif"` としてください。
+
+---
+
+## GitHub Pages への公開手順
+
+1. GitHub で `Proof-of-Craft` という名前の **public** リポジトリを作成
+2. このフォルダで以下を実行
+
+```bash
+git init
+git add .
+git commit -m "Initial commit: Proof of Craft"
+git branch -M main
+git remote add origin https://github.com/fryx404/Proof-of-Craft.git
+git push -u origin main
+```
+
+3. リポジトリの **Settings → Pages** で
+   - Source: `Deploy from a branch`
+   - Branch: `main` / `/ (root)`
+4. 数分後 https://fryx404.github.io/Proof-of-Craft/ で公開されます
+
+以降は `tools.json` を編集して push するだけで反映されます。
+
+---
+
+## 本サイトの WORKS からリンクする
+
+`fryx404.github.io` の WORKS ページに、既存カードと同じ形式で 1 件追加します。
+
+- タイトル: `Tool Gallery` もしくは `Proof of Craft`
+- 説明: 制作を支える自作ツールをまとめています
+- リンク先: `https://fryx404.github.io/Proof-of-Craft/`
+- タグ例: `ツール開発` / `Maya` / `Python`
+
+---
+
+## ローカルで確認する
+
+`tools.json` を `fetch` しているため、`index.html` をダブルクリックで開くと CORS で失敗します。
+簡易サーバー経由で開いてください。
+
+```bash
+npx serve .
+# または
+python -m http.server 8000
+```
+
+---
+
+## ファイル構成
+
+```
+Proof-of-Craft/
+├── index.html        画面の骨組みのみ（ツール追加時に触らない）
+├── tools.json        ★ ツールデータ。編集するのはここ
+├── assets/
+│   ├── style.css     デザイン
+│   └── app.js        描画・フィルタ・モーダル
+├── .nojekyll         GitHub Pages の Jekyll 処理を無効化
+└── README.md
+```
+
+`_url/` はローカル用のショートカット置き場です。公開には不要なので `.gitignore` で除外しています。

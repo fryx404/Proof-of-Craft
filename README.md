@@ -73,26 +73,55 @@ const TAG_COLORS = {
 
 ---
 
+## 見た目を変える
+
+文言・フォント・色は次の場所にまとまっています。
+
+| 変えたいもの | 場所 |
+|---|---|
+| 見出し下の2行（思想の文） | `tools.json` の `site.lead`（`<br>` で改行可） |
+| ページタイトル | `tools.json` の `site.title` |
+| 見出し `Tool Archive` の文字列 | `index.html` の `.hero__title` |
+| 見出しの大きさ | `style.css` `.hero__title` の `clamp()` の**第3引数** |
+| 見出しの濃さ | `style.css` 冒頭の `--fg-title` |
+| 見出しの書体 | `style.css` 冒頭の `--font-serif`（既定は Cormorant Garamond 300） |
+| アクセント色（金） | `style.css` 冒頭の `--accent` |
+| フッターの著者名 | `index.html` の `.site-footer__copy` |
+
+---
+
 ## GitHub Pages への公開手順
 
-1. GitHub で `Proof-of-Craft` という名前の **public** リポジトリを作成
-2. このフォルダで以下を実行
+`git init` / `commit` / `remote add` までは設定済みです。初回は push から始めます。
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit: Proof of Craft"
-git branch -M main
-git remote add origin https://github.com/fryx404/Proof-of-Craft.git
 git push -u origin main
 ```
 
-3. リポジトリの **Settings → Pages** で
-   - Source: `Deploy from a branch`
-   - Branch: `main` / `/ (root)`
-4. 数分後 https://fryx404.github.io/Proof-of-Craft/ で公開されます
+初回はブラウザが開いて GitHub のログインを求められます（Git Credential Manager）。
 
-以降は `tools.json` を編集して push するだけで反映されます。
+続いてリポジトリの **Settings → Pages** で以下を設定します。
+
+- Source: `Deploy from a branch`
+- Branch: `main` / `/ (root)`
+
+1〜3分後に https://fryx404.github.io/Proof-of-Craft/ で公開されます。
+
+### 以降の更新
+
+```bash
+git add .
+git commit -m "Add FT_NewTool"
+git push
+```
+
+`tools.json` を編集して push するだけで反映されます。
+
+### うまくいかないとき
+
+- **Pages が 404** → リポジトリが Public になっているか確認（Private は無料プランでは公開されない）
+- **ページは出るがカードが空** → `tools.json` がリポジトリ直下に push されているか確認
+- **サムネイルが出ない** → ツール側リポジトリが Public か、`image` の raw URL のブランチ名が合っているか確認
 
 ---
 
@@ -100,8 +129,8 @@ git push -u origin main
 
 `fryx404.github.io` の WORKS ページに、既存カードと同じ形式で 1 件追加します。
 
-- タイトル: `Tool Gallery` もしくは `Proof of Craft`
-- 説明: 制作を支える自作ツールをまとめています
+- タイトル: `Tool Archive`
+- 説明: CG制作のなかで書いたスクリプトをまとめています
 - リンク先: `https://fryx404.github.io/Proof-of-Craft/`
 - タグ例: `ツール開発` / `Maya` / `Python`
 
@@ -127,10 +156,19 @@ Proof-of-Craft/
 ├── index.html        画面の骨組みのみ（ツール追加時に触らない）
 ├── tools.json        ★ ツールデータ。編集するのはここ
 ├── assets/
-│   ├── style.css     デザイン
-│   └── app.js        描画・フィルタ・モーダル
+│   ├── style.css     デザイン（色・書体は冒頭の変数に集約）
+│   └── app.js        カード描画・タグ配色・モーダル
 ├── .nojekyll         GitHub Pages の Jekyll 処理を無効化
+├── .gitignore
 └── README.md
 ```
 
 `_url/` はローカル用のショートカット置き場です。公開には不要なので `.gitignore` で除外しています。
+
+## 画面の構成
+
+- **ヒーロー** — 見出し `Tool Archive` と `site.lead` の2行。左上に本サイトへ戻るボタン
+- **カード一覧** — `date` の降順。サムネイル・タグ・ツール名・要約
+- **モーダル** — カードをクリックで開く。GIF、Requirements、Install、Launch コード、Usage、Notes、GitHub / ZIP ボタン。閉じると次に開いたとき先頭から表示される
+
+`Esc` キーまたは背景クリックでモーダルを閉じられます。

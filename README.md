@@ -3,7 +3,7 @@
 CG 制作のなかで書いたスクリプトのギャラリーサイト。素の HTML + CSS + JS と `tools.json` だけで動きます。ビルド不要。
 （`Proof of Craft` はサイトの通し名で、リポジトリ名にも使っています。画面の見出しは `Tool Archive`）
 
-**公開URL（想定）**: https://fryx404.github.io/Proof-of-Craft/
+**公開URL**: https://fryx404.github.io/Proof-of-Craft/
 
 ---
 
@@ -87,52 +87,6 @@ const TAG_COLORS = {
 | 見出しの書体 | `style.css` 冒頭の `--font-serif`（既定は Cormorant Garamond 300） |
 | アクセント色（金） | `style.css` 冒頭の `--accent` |
 | フッターの著者名 | `index.html` の `.site-footer__copy` |
-
----
-
-## GitHub Pages への公開手順
-
-`git init` / `commit` / `remote add` までは設定済みです。初回は push から始めます。
-
-```bash
-git push -u origin main
-```
-
-初回はブラウザが開いて GitHub のログインを求められます（Git Credential Manager）。
-
-続いてリポジトリの **Settings → Pages** で以下を設定します。
-
-- Source: `Deploy from a branch`
-- Branch: `main` / `/ (root)`
-
-1〜3分後に https://fryx404.github.io/Proof-of-Craft/ で公開されます。
-
-### 以降の更新
-
-```bash
-git add .
-git commit -m "Add FT_NewTool"
-git push
-```
-
-`tools.json` を編集して push するだけで反映されます。
-
-### うまくいかないとき
-
-- **Pages が 404** → リポジトリが Public になっているか確認（Private は無料プランでは公開されない）
-- **ページは出るがカードが空** → `tools.json` がリポジトリ直下に push されているか確認
-- **サムネイルが出ない** → ツール側リポジトリが Public か、`image` の raw URL のブランチ名が合っているか確認
-
----
-
-## 本サイトの WORKS からリンクする
-
-`fryx404.github.io` の WORKS ページに、既存カードと同じ形式で 1 件追加します。
-
-- タイトル: `Tool Archive`
-- 説明: CG制作のなかで書いたスクリプトをまとめています
-- リンク先: `https://fryx404.github.io/Proof-of-Craft/`
-- タグ例: `ツール開発` / `Maya` / `Python`
 
 ---
 

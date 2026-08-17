@@ -2,7 +2,7 @@
   "$comment": "ツールを追加するときは tools 配列に1オブジェクト足すだけ。並び順は date の降順で自動ソートされます。",
   "site": {
     "title": "Tool Archive",
-    "lead": "同じ操作を三度繰り返したとき、スクリプトが生まれる。<br>このアーカイヴは、私の存在の証明である。",
+    "lead": "構築された論理は、作者の思考の結晶である。<br>このアーカイヴは、私の存在の証明である。",
     "mainSite": "https://fryx404.github.io/",
     "worksSite": "https://fryx404.github.io/works/",
     "github": "https://github.com/fryx404",

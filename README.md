@@ -1,13 +1,18 @@
 # Tool Archive — Proof of Craft
 
-CG 制作のなかで書いたスクリプトのギャラリーサイト。素の HTML + CSS + JS と `tools.json` だけで動きます。ビルド不要。
-（`Proof of Craft` はサイトの通し名で、リポジトリ名にも使っています。画面の見出しは `Tool Archive`）
+CG 制作のなかで書いたスクリプトのギャラリーサイト。
+
+> 構築された論理は、作者の思考の結晶である。
+> このアーカイヴは、私の存在の証明である。
 
 **公開URL**: https://fryx404.github.io/Proof-of-Craft/
 
+素の HTML + CSS + JS と `tools.json` だけで動きます。ビルド不要、依存パッケージなし。
+（`Proof of Craft` はサイトの通し名でリポジトリ名にも使っています。画面の見出しは `Tool Archive`）
+
 ---
 
-## ツールの追加方法
+## ツールを追加する
 
 `tools.json` の `tools` 配列に 1 オブジェクト追加するだけです。HTML は触りません。
 並び順は `date` の降順で自動ソートされます。
@@ -33,60 +38,11 @@ CG 制作のなかで書いたスクリプトのギャラリーサイト。素�
 }
 ```
 
-### フィールド一覧
+必須は `id` / `name` / `date` / `tags` / `summary` の 5 つ。
+残りは省略でき、空の項目は見出しごと自動で非表示になります。
+タグの色は自動で割り当てられるので、新しいタグを増やしても設定は不要です。
 
-| キー | 必須 | 説明 |
-|---|---|---|
-| `id` | ● | 一意のスラッグ（英小文字とハイフン） |
-| `name` | ● | ツール名 |
-| `nameJa` | | 日本語名 |
-| `date` | ● | `YYYY-MM`。並び順に使用 |
-| `version` | | バージョン表記 |
-| `tags` | ● | 配列。**色は自動で割り当てられる**（下記参照） |
-| `summary` | ● | カードの短い説明 |
-| `description` | | モーダルの本文 |
-| `image` | | サムネイル。GitHub の raw URL でOK |
-| `repo` / `download` | | ボタンのリンク先 |
-| `requirements` / `install` / `usage` / `notes` | | 配列。空なら見出しごと非表示 |
-| `code` | | 起動用コードブロック。`\n` で改行 |
-
-### タグの色
-
-タグの色は `assets/app.js` の `TAG_COLORS` で決まります。ここに無いタグは、名前から自動で 6 色のいずれかが割り当てられるので、**新しいタグを増やしても設定は不要**です（同じタグ名なら常に同じ色になります）。
-
-色を固定したい場合だけ `TAG_COLORS` に 1 行足してください。
-
-```js
-const TAG_COLORS = {
-  maya: 'teal',
-  python: 'blue',
-  houdini: 'coral',   // ← 追加例
-};
-```
-
-使える色: `teal` / `blue` / `purple` / `coral` / `amber` / `green`
-
-### 画像
-
-画像は GitHub リポジトリの raw URL をそのまま指定できます（形式: `https://raw.githubusercontent.com/fryx404/<repo>/main/images/sample.gif`）。
-ローカルに置きたい場合は `assets/img/` を作って `"image": "./assets/img/xxx.gif"` としてください。
-
----
-
-## 見た目を変える
-
-文言・フォント・色は次の場所にまとまっています。
-
-| 変えたいもの | 場所 |
-|---|---|
-| 見出し下の2行（思想の文） | `tools.json` の `site.lead`（`<br>` で改行可） |
-| ページタイトル | `tools.json` の `site.title` |
-| 見出し `Tool Archive` の文字列 | `index.html` の `.hero__title` |
-| 見出しの大きさ | `style.css` `.hero__title` の `clamp()` の**第3引数** |
-| 見出しの濃さ | `style.css` 冒頭の `--fg-title` |
-| 見出しの書体 | `style.css` 冒頭の `--font-serif`（既定は Cormorant Garamond 300） |
-| アクセント色（金） | `style.css` 冒頭の `--accent` |
-| フッターの著者名 | `index.html` の `.site-footer__copy` |
+各フィールドの詳細は [docs/デザインメモ.md](docs/デザインメモ.md) を参照してください。
 
 ---
 
@@ -107,13 +63,13 @@ python -m http.server 8000
 
 ```
 Proof-of-Craft/
-├── index.html        画面の骨組みのみ（ツール追加時に触らない）
+├── index.html        画面の骨組み + テーマ切替スクリプト（ツール追加時に触らない）
 ├── tools.json        ★ ツールデータ。編集するのはここ
 ├── assets/
-│   ├── style.css     デザイン（色・書体は冒頭の変数に集約）
+│   ├── style.css     デザイン（色は冒頭のカラートークンに集約）
 │   └── app.js        カード描画・タグ配色・モーダル
+├── docs/             設計メモ・公開手順
 ├── .nojekyll         GitHub Pages の Jekyll 処理を無効化
-├── .gitignore
 └── README.md
 ```
 
@@ -121,8 +77,23 @@ Proof-of-Craft/
 
 ## 画面の構成
 
-- **ヒーロー** — 見出し `Tool Archive` と `site.lead` の2行。左上に本サイトへ戻るボタン
+- **ヒーロー** — 見出し `Tool Archive` と `site.lead` の2行。左上に本サイトへ戻るボタン、右上にテーマ切替
 - **カード一覧** — `date` の降順。サムネイル・タグ・ツール名・要約
-- **モーダル** — カードをクリックで開く。GIF、Requirements、Install、Launch コード、Usage、Notes、GitHub / ZIP ボタン。閉じると次に開いたとき先頭から表示される
+- **モーダル** — カードをクリックで開く。GIF、Requirements、Install、Launch コード、Usage、Notes、GitHub / ZIP ボタン
 
 `Esc` キーまたは背景クリックでモーダルを閉じられます。
+
+デザインはライト / ダーク / システム連動の 3 モードに対応しています。
+
+---
+
+## ドキュメント
+
+| | |
+|---|---|
+| [docs/デザインメモ.md](docs/デザインメモ.md) | 配色・書体・余白をどこで変えるか。実装上の落とし穴と、そう作った理由 |
+| [docs/更新方法.md](docs/更新方法.md) | GitHub Pages への公開手順とトラブル対応 |
+
+---
+
+© 2025–2026 Takumi Furuya (fryx404)

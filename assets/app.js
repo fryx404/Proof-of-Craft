@@ -1,6 +1,10 @@
 /* =========================================================
    Tool Archive — app
    tools.json を読み込んでカード一覧 / モーダルを生成する
+
+   ※ 既存版からの変更は末尾 catch 内の1箇所のみ。
+     エラー文の色が金色ハードコードだったのを、
+     style.css のカラートークン（var(--*)）参照に置き換えています。
    ========================================================= */
 (() => {
   'use strict';
@@ -158,9 +162,10 @@
     })
     .catch(err => {
       console.error(err);
-      grid.innerHTML = `<p style="color:#8f8d8a;font-size:14px">
+      // 色はハードコードせず style.css のトークンを参照する
+      grid.innerHTML = `<p style="color:var(--text-muted);font-size:14px">
         tools.json の読み込みに失敗しました。ローカルで確認する場合は
-        <code style="color:#c9a227">npx serve</code> などの簡易サーバー経由で開いてください。</p>`;
+        <code style="color:var(--primary-ink);font-weight:700">npx serve</code> などの簡易サーバー経由で開いてください。</p>`;
       $('#year').textContent = new Date().getFullYear();
     });
 })();

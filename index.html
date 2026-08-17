@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,47 @@
 <meta property="og:title" content="Tool Archive — Furuya Takumi">
 <meta property="og:description" content="Furuya Takumi (FRYX) が CG 制作のなかで書いたスクリプトのアーカイヴ。Maya / Python。">
 <meta property="og:type" content="website">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#00D1FF">
+
+<!-- テーマをCSS適用前に確定させ、リロード時の一瞬のちらつきを防ぐ -->
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('poc-theme') || 'system';
+    var dark = saved === 'dark' ||
+      (saved === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  } catch (e) { /* localStorage不可の環境では light のまま */ }
+})();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
 
 <a class="skip-link" href="#tools">本文へスキップ</a>
 
-<a class="back-link" href="https://fryx404.github.io/">← Main Site</a>
+<a class="back-link" href="https://fryx404.github.io/">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  Main Site
+</a>
+
+<!-- テーマ切替: ライト / ダーク / システム連動 -->
+<div class="theme-switch" role="group" aria-label="テーマ切り替え">
+  <button type="button" data-theme-set="light" aria-pressed="false" title="ライトモード" aria-label="ライトモード">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>
+  </button>
+  <button type="button" data-theme-set="dark" aria-pressed="false" title="ダークモード" aria-label="ダークモード">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+  <button type="button" data-theme-set="system" aria-pressed="false" title="システム連動" aria-label="システム連動">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  </button>
+</div>
 
 <main>
   <section class="hero">
@@ -38,7 +69,9 @@
 </main>
 
 <footer class="site-footer">
-  <p class="site-footer__copy">© <span id="year"></span> 古屋 匠. All rights reserved.</p>
+  <!-- 起点2025 = 最初のツールを公開した年 / 終点 = 最終更新年（#year は app.js が現在年を入れる）
+       毎年自動で伸ばしたくない場合は <span id="year"></span> を 2026 などの固定値に書き換える -->
+  <p class="site-footer__copy">© 2025–<span id="year"></span> Takumi Furuya (fryx404)</p>
 </footer>
 
 <!-- ===== Modal ===== -->
@@ -49,6 +82,36 @@
     <div class="modal__body" id="modal-body"></div>
   </div>
 </div>
+
+<!-- テーマ管理: 3モード + localStorage永続化 + OS設定への追従 -->
+<script>
+(function () {
+  var KEY = 'poc-theme';
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  var btns = document.querySelectorAll('[data-theme-set]');
+
+  function read() { try { return localStorage.getItem(KEY) || 'system'; } catch (e) { return 'system'; } }
+
+  function apply() {
+    var pref = read();
+    var dark = pref === 'dark' || (pref === 'system' && mq.matches);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btns.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.themeSet === pref));
+    });
+  }
+
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, b.dataset.themeSet); } catch (e) {}
+      apply();
+    });
+  });
+
+  mq.addEventListener('change', apply);   // system選択中はOS設定に追従
+  apply();
+})();
+</script>
 
 <script src="./assets/app.js"></script>
 </body>

@@ -1,329 +1,592 @@
-/* =========================================================
-   Proof of Craft — style
-   ========================================================= */
+@charset "UTF-8";
+/* =============================================================================
+   Tool Archive — Proof of Craft
+   Design System: "fryx404 Pop"  (Electric Cyan / Sunshine Yellow)
 
-:root {
-  --bg:          #0a0a0c;
-  --bg-elev:     #111114;
-  --bg-elev-2:   #17171b;
-  --line:        #26262c;
-  --line-soft:   #1c1c21;
-  --fg:          #e8e6e3;
-  --fg-title:    #9d9a95;
-  --fg-mute:     #8f8d8a;
-  --fg-dim:      #5d5b58;
-  --accent:      #c9a227;
-  --accent-soft: rgba(201, 162, 39, 0.14);
-  --radius:      2px;
-  --maxw:        1180px;
-  --font-jp:     "Zen Kaku Gothic New", system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
-  --font-mono:   "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif:  "Cormorant Garamond", "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", serif;
+   ■ 色を変えたいとき
+     下の「1. カラートークン」だけを編集してください。
+     ここから下では色をハードコードせず var(--*) しか使っていません。
+
+   ■ テーマ
+     <html data-theme="light|dark"> の切り替えで全体が入れ替わります。
+     切り替えUIと localStorage 永続化は index.html の inline script。
+   ========================================================================== */
+
+/* =============================================================================
+   1. カラートークン
+   ========================================================================== */
+:root,
+[data-theme="light"] {
+  --bg:            #FFFFFF;
+  --surface:       #FFFFFF;
+  --surface-sunk:  #F3FBFF;   /* コードブロック・プレースホルダ等の沈み面 */
+  --primary:       #00D1FF;   /* Electric Cyan — 面・枠・影に使う */
+  --primary-ink:   #007A96;   /* 白地に文字として置く派生（AA 4.9:1） */
+  --primary-soft:  #E2F8FF;
+  --accent:        #FFD600;   /* Sunshine Yellow */
+  --accent-ink:    #7A5C00;
+  --accent-soft:   #FFF6CC;
+  --text:          #2D3436;   /* Charcoal */
+  --text-muted:    #5F6A6E;
+  --text-faint:    #8B9599;
+  --on-primary:    #2D3436;   /* primary面の上に乗る文字 */
+  --on-accent:     #2D3436;
+  --border:        #E2ECF0;
+  --border-strong: #2D3436;
+  --overlay:       rgba(45, 52, 54, .45);
+
+  /* ライトモード: primary を帯びた薄いドロップシャドウでポップさを出す */
+  --shadow-sm: 0 2px  6px rgba(0, 209, 255, .16);
+  --shadow-md: 0 8px 22px rgba(0, 209, 255, .22);
+  --shadow-lg: 0 18px 40px rgba(0, 209, 255, .28);
+  --shadow-modal: 0 30px 80px rgba(0, 209, 255, .30);
+  --ring: rgba(0, 209, 255, .45);
 }
 
-* { box-sizing: border-box; }
+[data-theme="dark"] {
+  --bg:            #000000;   /* True Black / OLED */
+  --surface:       #1A1A1A;
+  --surface-sunk:  #101010;
+  --primary:       #00D1FF;
+  --primary-ink:   #00D1FF;   /* 黒地なら原色のまま可読 */
+  --primary-soft:  #06333E;
+  --accent:        #FFD600;
+  --accent-ink:    #FFD600;
+  --accent-soft:   #3A3200;
+  --text:          #F5F5F5;
+  --text-muted:    #A8B0B3;
+  --text-faint:    #767E81;
+  --on-primary:    #2D3436;
+  --on-accent:     #2D3436;
+  --border:        #2A2A2A;
+  --border-strong: #3D3D3D;
+  --overlay:       rgba(0, 0, 0, .72);
 
-html { scroll-behavior: smooth; }
+  /* ダークモード: 不透明度を抑えた微弱なシャドウ＝浮遊感のみ表現 */
+  --shadow-sm: 0 2px  6px rgba(0, 0, 0, .55);
+  --shadow-md: 0 8px 22px rgba(0, 0, 0, .60);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, .66);
+  --shadow-modal: 0 30px 80px rgba(0, 0, 0, .80);
+  --ring: rgba(0, 209, 255, .55);
+}
+
+/* --- 形・字のトークン ------------------------------------------------------ */
+:root {
+  --radius:    16px;   /* 角丸は大きめ＝フレンドリーで柔らかい印象 */
+  --radius-lg: 22px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  --wrap: 1180px;
+  --font-en:   'Outfit', system-ui, -apple-system, sans-serif;
+  --font-ja:   'Zen Kaku Gothic New', 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* =============================================================================
+   2. ベース
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-jp);
-  font-size: 16px;
+  color: var(--text);
+  font-family: var(--font-ja);
+  font-weight: 500;
+  font-size: 15px;
   line-height: 1.85;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  transition: background-color .3s var(--ease), color .3s var(--ease);
 }
+body.is-locked { overflow: hidden; }
 
-/* subtle grain / vignette */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(201,162,39,0.07), transparent 55%),
-    radial-gradient(ellipse at 50% 120%, rgba(255,255,255,0.03), transparent 60%);
+img { max-width: 100%; display: block; }
+svg { stroke-width: 2.5; }          /* 線画アイコンは太めに統一 */
+
+/* hidden属性を最優先で効かせる。
+   .empty や .modal に display:flex / grid を指定すると、
+   ブラウザ標準の [hidden]{display:none} を上書きしてしまい、
+   JS が hidden を立てても消えなくなるため。 */
+[hidden] { display: none !important; }
+
+a { color: var(--primary-ink); }
+
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 8px;
 }
-
-main, footer { position: relative; z-index: 1; }
-
-a { color: inherit; }
 
 .skip-link {
-  position: absolute; left: -9999px;
-  background: var(--accent); color: #000; padding: 8px 16px; z-index: 100;
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  padding: 12px 20px;
+  background: var(--primary); color: var(--on-primary);
+  border-radius: 0 0 var(--radius) 0;
+  font-weight: 700; text-decoration: none;
 }
-.skip-link:focus { left: 12px; top: 12px; }
+.skip-link:focus { left: 0; }
 
-/* ---------- back link ---------- */
+/* =============================================================================
+   3. ヘッダー要素（戻るリンク / テーマ切替）
+   ========================================================================== */
 .back-link {
-  position: fixed; top: 24px; left: 24px; z-index: 30;
-  font-family: var(--font-mono);
-  font-size: 11.5px; letter-spacing: 0.1em;
-  color: var(--fg-mute); text-decoration: none;
+  position: fixed; top: 20px; left: 20px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(10,10,12,0.7);
-  backdrop-filter: blur(10px);
-  transition: color .22s, border-color .22s, background .22s;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+  font-family: var(--font-en); font-weight: 700; font-size: 13px;
+  text-decoration: none;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
-.back-link:hover, .back-link:focus-visible {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  outline: none;
+.back-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
 }
 
-/* ---------- hero ---------- */
+.theme-switch {
+  position: fixed; top: 20px; right: 20px; z-index: 60;
+  display: flex; gap: 2px; padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+}
+.theme-switch button {
+  display: grid; place-items: center;
+  width: 34px; height: 30px; padding: 0;
+  border: 0; border-radius: var(--radius-pill);
+  background: transparent; color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color .2s var(--ease), color .2s var(--ease);
+}
+.theme-switch button:hover { color: var(--text); }
+.theme-switch button[aria-pressed="true"] {
+  background: var(--primary); color: var(--on-primary);
+}
+
+/* =============================================================================
+   4. ヒーロー
+   ========================================================================== */
 .hero {
-  max-width: var(--maxw); margin: 0 auto;
-  padding: 110px 24px 90px;
-  text-align: center;
+  position: relative;
+  display: flex; flex-direction: column;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 112px 32px 56px;   /* 上下の余白は詰める。画面高に依存させない */
+  overflow: hidden;
 }
+.hero::before {          /* シアンのやわらかい発光を1つだけ置く */
+  content: "";
+  position: absolute; top: -46%; left: -8%;
+  width: 520px; height: 520px;
+  background: radial-gradient(closest-side, var(--primary), transparent 72%);
+  opacity: .16;
+  pointer-events: none;
+}
+.hero > * { position: relative; }
+
 .hero__title {
-  font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 6vw, 3.6rem);
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  color: var(--fg-title);
-  margin: 0; line-height: 1.05;
+  margin: 0;
+  font-family: var(--font-en);
+  font-weight: 600;            /* SemiBold。800だと画面を占めすぎる */
+  font-size: clamp(44px, 10vw, 116px);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--text);
 }
+.hero__title::after {    /* イエローは「.」の1点だけに絞る */
+  content: ".";
+  color: var(--accent);
+}
+
 .hero__lead {
-  max-width: 620px; margin: 40px auto 0;
-  color: var(--fg-mute); font-size: 15px; line-height: 2.2;
+  max-width: 40em;
+  margin: 24px 0 0;
+  font-size: clamp(14px, 1.5vw, 16.5px);
+  line-height: 2;
+  color: var(--text-muted);
 }
-.hero__scroll { margin-top: 72px; display: flex; justify-content: center; }
+
+/* スクロール誘導線: ヒーローが画面を埋めなくなったため非表示。
+   復活させたい場合は display を消してください（マークアップは残してあります）。 */
+.hero__scroll {
+  display: none;
+  position: absolute; left: 32px; bottom: 40px;
+  width: 1px; height: 56px;
+  background: var(--border);
+  overflow: hidden;
+}
 .hero__scroll span {
-  display: block; width: 1px; height: 56px;
-  background: linear-gradient(to bottom, var(--accent), transparent);
-  animation: drop 2.4s ease-in-out infinite;
+  display: block; width: 100%; height: 40%;
+  background: var(--primary);
+  animation: scrollHint 2.2s var(--ease) infinite;
 }
-@keyframes drop {
-  0%, 100% { opacity: .25; transform: scaleY(.55); transform-origin: top; }
-  50%      { opacity: 1;   transform: scaleY(1);   transform-origin: top; }
+@keyframes scrollHint {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(250%); }
 }
 
-/* ---------- section ---------- */
-.tools { max-width: var(--maxw); margin: 0 auto; padding: 0 24px 120px; }
-
-/* ---------- tags ---------- */
-.tags { display: flex; flex-wrap: wrap; gap: 6px; }
-
-.tag {
-  font-family: var(--font-mono);
-  font-size: 10.5px; letter-spacing: 0.08em; line-height: 1.6;
-  padding: 3px 9px;
-  border-radius: var(--radius);
-  border: 1px solid;
-  white-space: nowrap;
+/* =============================================================================
+   5. ギャラリー
+   ========================================================================== */
+.tools {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 32px 120px;
 }
-.tag--teal   { color: #5dcaa5; background: rgba(93,202,165,0.10);  border-color: rgba(93,202,165,0.28); }
-.tag--blue   { color: #6fa8e6; background: rgba(111,168,230,0.10); border-color: rgba(111,168,230,0.28); }
-.tag--purple { color: #9d92e2; background: rgba(157,146,226,0.10); border-color: rgba(157,146,226,0.28); }
-.tag--coral  { color: #e08a68; background: rgba(224,138,104,0.10); border-color: rgba(224,138,104,0.28); }
-.tag--amber  { color: #d9a83f; background: rgba(217,168,63,0.10);  border-color: rgba(217,168,63,0.28); }
-.tag--green  { color: #92c063; background: rgba(146,192,99,0.10);  border-color: rgba(146,192,99,0.28); }
 
-/* ---------- grid ---------- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 28px;
+  gap: 26px;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
 }
 
+/* --- カード（app.js 側で <button> として生成される） --------------------- */
 .card {
-  position: relative;
-  background: var(--bg-elev);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius);
-  overflow: hidden;
-  cursor: pointer;
-  text-align: left;
-  padding: 0; margin: 0;
-  color: inherit; font: inherit;
   display: flex; flex-direction: column;
-  transition: transform .35s cubic-bezier(.2,.7,.3,1), border-color .3s, box-shadow .35s;
-  animation: fade-up .5s both;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  font: inherit; color: inherit; text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  animation: cardIn .55s var(--ease) forwards;
+  transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
 }
-.card:hover, .card:focus-visible {
-  transform: translateY(-5px);
-  border-color: rgba(201,162,39,0.4);
-  box-shadow: 0 18px 44px rgba(0,0,0,0.55);
-  outline: none;
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
 }
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg);
 }
 
 .card__media {
   position: relative;
   aspect-ratio: 16 / 10;
-  background: var(--bg-elev-2);
+  background: var(--surface-sunk);
+  border-bottom: 1px solid var(--border);
   overflow: hidden;
-  border-bottom: 1px solid var(--line-soft);
 }
 .card__media img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: grayscale(0.35) contrast(1.03);
-  transition: filter .45s ease, transform .6s cubic-bezier(.2,.7,.3,1);
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .5s var(--ease);
 }
-.card:hover .card__media img { filter: grayscale(0) contrast(1); transform: scale(1.04); }
+.card:hover .card__media img { transform: scale(1.05); }
 
-.card__media--empty {
-  display: grid; place-items: center;
-  font-family: var(--font-mono); font-size: 28px; color: var(--fg-dim);
-  letter-spacing: 0.1em;
+.card__media--empty::after {   /* 画像が無い/読み込めない時のプレースホルダ */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(135deg, var(--primary-soft), transparent 55%),
+    repeating-linear-gradient(45deg, var(--border) 0 1px, transparent 1px 11px);
+  opacity: .8;
 }
 
-.card__body { padding: 22px 22px 24px; display: flex; flex-direction: column; flex: 1; }
-
-.card__body .tags { margin-bottom: 15px; }
+.card__body {
+  display: flex; flex-direction: column;
+  gap: 8px;
+  padding: 20px 22px 22px;
+  flex: 1;
+}
 
 .card__name {
-  font-family: var(--font-mono);
-  font-size: 17px; font-weight: 500; letter-spacing: 0.01em;
-  margin: 0; color: var(--fg);
+  margin: 4px 0 0;
+  font-family: var(--font-en);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -.015em;
+  color: var(--text);
+  transition: color .2s var(--ease);
 }
-.card__name-ja { font-size: 12px; color: var(--fg-dim); margin: 5px 0 0; letter-spacing: 0.08em; }
+.card:hover .card__name { color: var(--primary-ink); }
+
+.card__name-ja {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
 .card__summary {
-  font-size: 13.5px; color: var(--fg-mute); line-height: 1.9;
-  margin: 14px 0 0; flex: 1;
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--text-muted);
+  flex: 1;
 }
+
 .card__more {
-  margin-top: 20px; font-family: var(--font-mono);
-  font-size: 11px; letter-spacing: 0.16em; color: var(--accent);
   display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 16px; padding-top: 15px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-en); font-weight: 700; font-size: 12.5px;
+  letter-spacing: .05em; text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color .2s var(--ease);
 }
-.card__more span { transition: transform .25s; }
+.card__more span { transition: transform .25s var(--ease); }
+.card:hover .card__more { color: var(--primary-ink); }
 .card:hover .card__more span { transform: translateX(5px); }
 
-/* ---------- empty ---------- */
-.empty {
-  text-align: center; color: var(--fg-dim);
-  padding: 90px 0; font-size: 13px; line-height: 2.4;
-}
-.empty strong { display: block; color: var(--fg-mute); font-weight: 500; }
-.empty__mark { display: block; font-size: 44px; color: var(--line); margin-bottom: 18px; }
+/* --- タグ -----------------------------------------------------------------
+   app.js が tag--teal / blue / purple / coral / amber / green を出力する。
+   ブランドを2色に保つため、6クラスを3つの見え方に集約している。
+   -------------------------------------------------------------------------- */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
 
-/* ---------- footer ---------- */
-.site-footer {
-  border-top: 1px solid var(--line-soft);
-  padding: 60px 24px 70px;
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-family: var(--font-en);
+  font-weight: 700; font-size: 11.5px;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+/* 技術・環境系 → シアン */
+.tag--teal, .tag--blue {
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+}
+/* 役割・工程系 → イエロー */
+.tag--purple, .tag--coral {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+/* その他 → ニュートラル */
+.tag--amber, .tag--green {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+/* --- 空状態 --------------------------------------------------------------- */
+.empty {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 90px 24px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-size: 13.5px;
   text-align: center;
 }
-.site-footer__copy { font-family: var(--font-mono); font-size: 11px; color: var(--fg-dim); margin: 0; letter-spacing: 0.08em; }
+.empty__mark {
+  font-family: var(--font-en); font-size: 40px; font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+.empty strong { font-size: 16px; color: var(--text); }
 
-/* ---------- modal ---------- */
-.modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 24px; }
+/* =============================================================================
+   6. モーダル
+   ========================================================================== */
+.modal {
+  position: fixed; inset: 0; z-index: 100;
+  display: grid; place-items: center;
+  padding: 24px;
+}
 .modal[hidden] { display: none; }
+
 .modal__backdrop {
   position: absolute; inset: 0;
-  background: rgba(4,4,6,0.86);
+  background: var(--overlay);
   backdrop-filter: blur(6px);
-  animation: fade .25s both;
+  animation: fade .25s var(--ease);
 }
-@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
 .modal__panel {
   position: relative;
-  width: min(820px, 100%);
-  max-height: 88vh; overflow-y: auto;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  animation: rise .32s cubic-bezier(.2,.7,.3,1) both;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  animation: panelIn .35s var(--ease);
 }
-@keyframes rise { from { opacity: 0; transform: translateY(22px) } to { opacity: 1; transform: none } }
-
-.modal__panel::-webkit-scrollbar { width: 8px; }
-.modal__panel::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(24px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
 
 .modal__close {
-  position: sticky; top: 0; float: right;
-  margin: 12px 12px 0 0;
-  background: rgba(10,10,12,0.8); color: var(--fg-mute);
-  border: 1px solid var(--line); border-radius: var(--radius);
-  width: 34px; height: 34px; cursor: pointer; font-size: 13px;
-  z-index: 2; transition: all .2s;
+  position: sticky; top: 14px;
+  float: right;
+  margin: 14px 14px 0 0;
+  z-index: 2;
+  display: grid; place-items: center;
+  width: 38px; height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px; line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
 }
-.modal__close:hover { color: var(--fg); border-color: var(--fg-dim); }
+.modal__close:hover {
+  background: var(--primary); color: var(--on-primary);
+  border-color: var(--primary);
+  transform: rotate(90deg);
+}
 
-.modal__body { padding: 0 0 44px; }
+/* --- モーダル本文 --------------------------------------------------------- */
+.detail__media {
+  background: var(--surface-sunk);
+  border-bottom: 1px solid var(--border);
+}
+.detail__media img { width: 100%; height: auto; }
 
-.detail__media { background: var(--bg-elev-2); border-bottom: 1px solid var(--line-soft); }
-.detail__media img { width: 100%; display: block; }
-
-.detail__inner { padding: 34px 38px 0; }
-
-.detail .tags { margin-bottom: 18px; }
+.detail__inner { padding: 30px 36px 40px; }
 
 .detail__name {
-  font-family: var(--font-mono); font-size: clamp(1.3rem, 3.4vw, 1.8rem);
-  font-weight: 500; margin: 0; letter-spacing: 0.01em;
+  margin: 14px 0 0;
+  font-family: var(--font-en);
+  font-weight: 800; font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.15; letter-spacing: -.025em;
+  color: var(--text);
 }
-.detail__name-ja { color: var(--fg-dim); font-size: 13px; margin: 6px 0 0; letter-spacing: 0.1em; }
+.detail__name-ja {
+  margin: 6px 0 0;
+  font-size: 13.5px; font-weight: 700;
+  color: var(--text-faint);
+}
 
 .detail__meta {
-  display: flex; flex-wrap: wrap; gap: 22px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
-  color: var(--fg-dim);
-  margin: 22px 0 0; padding: 16px 0;
-  border-top: 1px solid var(--line-soft);
-  border-bottom: 1px solid var(--line-soft);
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 22px 0 0;
 }
-.detail__meta b { color: var(--fg-mute); font-weight: 500; }
-
-.detail__desc { color: var(--fg-mute); font-size: 14.5px; line-height: 2.1; margin: 26px 0 0; }
-
-.detail h3 {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.26em;
-  color: var(--accent); text-transform: uppercase;
-  margin: 38px 0 14px; font-weight: 500;
+.detail__meta span {
+  padding: 6px 14px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-en);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--text-faint);
 }
-.detail ul, .detail ol { margin: 0; padding-left: 1.3em; color: var(--fg-mute); font-size: 14px; line-height: 2.1; }
-.detail li { margin-bottom: 4px; }
-.detail li::marker { color: var(--fg-dim); }
+.detail__meta b { color: var(--text); letter-spacing: 0; }
 
-.detail pre {
-  background: #08080a; border: 1px solid var(--line-soft);
+.detail__desc {
+  margin: 26px 0 0;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+.detail__inner h3 {
+  margin: 38px 0 12px;
+  padding-left: 14px;
+  border-left: 4px solid var(--primary);
+  font-family: var(--font-en);
+  font-weight: 700; font-size: 14px;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text);
+}
+
+.detail__inner ul,
+.detail__inner ol {
+  margin: 0; padding-left: 1.35em;
+  font-size: 14px; color: var(--text-muted);
+}
+.detail__inner li { margin-bottom: 6px; }
+.detail__inner li::marker { color: var(--primary-ink); font-weight: 700; }
+
+.detail__inner pre {
+  margin: 0;
+  padding: 18px 20px;
+  background: var(--surface-sunk);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px; overflow-x: auto; margin: 0;
-  font-family: var(--font-mono); font-size: 13px; line-height: 1.8;
-  color: #cfd3d8;
+  overflow-x: auto;
+}
+.detail__inner code {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: var(--text);
 }
 
-.detail__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+/* --- ボタン --------------------------------------------------------------- */
+.detail__actions {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin-top: 40px; padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
 .btn {
-  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em;
-  padding: 12px 22px; border-radius: var(--radius);
-  border: 1px solid var(--line); color: var(--fg-mute);
-  text-decoration: none; transition: all .22s;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-en); font-weight: 700; font-size: 14px;
+  text-decoration: none;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
-.btn:hover { color: var(--fg); border-color: var(--fg-dim); }
-.btn--primary { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
-.btn--primary:hover { color: #000; background: var(--accent); border-color: var(--accent); }
+.btn:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+.btn--primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-md);
+}
+.btn--primary:hover { box-shadow: var(--shadow-lg); }
 
-body.is-locked { overflow: hidden; }
+/* =============================================================================
+   7. フッター
+   ========================================================================== */
+.site-footer {
+  padding: 36px 32px 44px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.site-footer__copy {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--text-faint);
+}
 
-/* ---------- responsive ---------- */
+/* =============================================================================
+   8. レスポンシブ / モーション配慮
+   ========================================================================== */
 @media (max-width: 720px) {
-  .back-link { top: 14px; left: 14px; padding: 8px 13px; font-size: 11px; }
-  .hero { padding: 96px 20px 60px; }
-  .tools { padding: 0 18px 90px; }
+  .hero { padding: 96px 22px 44px; }
+  .hero__scroll { left: 22px; }
+  .tools { padding: 0 22px 84px; }
   .grid { grid-template-columns: 1fr; gap: 20px; }
-  .detail__inner { padding: 28px 22px 0; }
-  .modal { padding: 0; }
-  .modal__panel { max-height: 100vh; height: 100%; border: none; border-radius: 0; }
+  .detail__inner { padding: 24px 22px 32px; }
+  .modal { padding: 12px; }
+  .btn { flex: 1; justify-content: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .card { opacity: 1; }
   html { scroll-behavior: auto; }
 }
